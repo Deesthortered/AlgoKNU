@@ -424,10 +424,10 @@ namespace spaceRed_Black_Tree
 		T FindByIndex(size_t ind)
 		{
 			TreeNode *p = this->main_root;
-			while (p && p->size != ind)
+			while (p && getRank(p) != ind)
 			{
-				if (p->left->size + 1 < ind) p = p->right;
-				else if (p->left->size + 1 > ind) p = p->left;
+				if (getRank(p->left) < ind) p = p->right;
+				else if (getRank(p->left) > ind) p = p->left;
 			}
 			if (!p) return T();
 			return p->data;
