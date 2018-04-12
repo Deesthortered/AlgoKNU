@@ -9,11 +9,7 @@ namespace spaceRed_Black_Tree
 		{
 			T data;
 			bool red;
-
-			////// Для порядковой статистики
-			size_t size;
-			////// Для порядковой статистики
-
+			size_t size; // Для порядковой статистики
 			TreeNode *left;
 			TreeNode *right;
 			TreeNode *parent;
@@ -51,14 +47,6 @@ namespace spaceRed_Black_Tree
 				copy(this->main_root, obj.main_root, obj.nil);
 			}
 		}
-		~Red_Black_Tree()
-		{
-			clear(this->main_root);
-			delete nil;
-			this->main_root = nullptr;
-			this->nil = nullptr;
-		}
-
 		Red_Black_Tree& operator=(const Red_Black_Tree &obj)
 		{
 			clear(this->main_root);
@@ -71,6 +59,13 @@ namespace spaceRed_Black_Tree
 				copy(this->main_root, obj.main_root, obj.nil);
 			}
 			return *this;
+		}
+		~Red_Black_Tree()
+		{
+			clear(this->main_root);
+			delete nil;
+			this->main_root = nullptr;
+			this->nil = nullptr;
 		}
 
 		bool Insert(T data)
@@ -113,6 +108,17 @@ namespace spaceRed_Black_Tree
 				current = current->parent;
 			}
 			return false;
+		}
+		T	 Find(T data)
+		{
+			TreeNode *p = this->main_root;
+			while (p && p->data != data)
+			{
+				if (p->data < data) p = p->right;
+				else if (p->data > data) p = p->left;
+			}
+			if (!p) return T();
+			return p->data;
 		}
 		bool Delete(T data)
 		{
