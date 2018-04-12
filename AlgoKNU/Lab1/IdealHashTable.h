@@ -13,6 +13,7 @@ namespace spaceIdealHashTable
 			size_t key;
 			TData data;
 			HashTableNode() : key(0), data(TData()) {};
+			HashTableNode(HashTableNode *obj) { key = obj->key; data = obj->data; }
 			HashTableNode(size_t _key, TData _data) : key(_key), data(_data) {};
 		};
 
@@ -21,6 +22,48 @@ namespace spaceIdealHashTable
 		vector<size_t> A, B, P, M;
 	public:
 		IdealHashTable() = default;
+		IdealHashTable(const IdealHashTable &obj)
+		{
+			this->mA = obj.mA;
+			this->mB = obj.mB;
+			this->mP = obj.mP;
+			this->mM = obj.mM;
+
+			this->A = obj.A;
+			this->B = obj.B;
+			this->P = obj.P;
+			this->M = obj.M;
+
+			this->table.resize(obj.table.size());
+			for (size_t i = 0; i < this->table.size(); i++)
+				this->table[i].resize(obj.table[i].size());
+			for (size_t i = 0; i < this->table.size(); i++)
+				for (size_t j = 0; j < this->table[i].size(); j++)
+					if (obj.table[i][j])
+						this->table[i][j] = new HashTableNode(obj.table[i][j]);
+		}
+		IdealHashTable& operator=(const IdealHashTable &obj)
+		{
+			clear();
+			this->mA = obj.mA;
+			this->mB = obj.mB;
+			this->mP = obj.mP;
+			this->mM = obj.mM;
+
+			this->A = obj.A;
+			this->B = obj.B;
+			this->P = obj.P;
+			this->M = obj.M;
+
+			this->table.resize(obj.table.size());
+			for (size_t i = 0; i < this->table.size(); i++)
+				this->table[i].resize(obj.table[i].size());
+			for (size_t i = 0; i < this->table.size(); i++)
+				for (size_t j = 0; j < this->table[i].size(); j++)
+					if (obj.table[i][j])
+						this->table[i][j] = new HashTableNode(obj.table[i][j]);
+			return *this;
+		}
 		~IdealHashTable()
 		{
 			clear();
@@ -99,7 +142,8 @@ namespace spaceIdealHashTable
 		bool Exist(size_t key)
 		{
 			size_t h = Hash(key, mA, mB, mM, mP);
-			return (this->table[h][Hash(key, A[h], B[h], M[h], P[h])] == nullptr ? false : true);
+			size_t h1 = Hash(key, A[h], B[h], M[h], P[h]);
+			return (this->table[h][h1] == nullptr ? false : true);
 		}
 		TData Find(size_t key)
 		{

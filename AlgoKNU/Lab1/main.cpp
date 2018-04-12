@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <string>
 #include "IdealHashTable.h"
 using namespace std;
 
@@ -15,7 +16,6 @@ public:
 	{
 		this->name = name;
 		this->surname = surname;
-		this->department = nullptr;
 	}
 	void SetDepartment(string name)
 	{
@@ -32,7 +32,7 @@ public:
 	}
 	string GetDepartmentName()
 	{
-		this->department;
+		return this->department;
 	}
 
 	static size_t GetKey(string surname)
@@ -67,10 +67,9 @@ public:
 		{
 			employees[i].SetDepartment(this->name);
 			tmp.push_back(pair<size_t, Employee>(Employee::GetKey(employees[i].GetSurname()), employees[i]));
-			employee_keyfield.push_back(employees[i].GetName());
+			employee_keyfield.push_back(employees[i].GetSurname());
 		}
 		employee_table = spaceIdealHashTable::IdealHashTable<Employee>(tmp);
-		this->enterprise = nullptr;
 	}
 	void SetEnterprise(string name)
 	{
@@ -200,6 +199,39 @@ public:
 
 int main()
 {
+	vector<Employee> w1 = { Employee("Ivan", "Ivanov"), Employee("Petro", "Sidorov"), Employee("Sidor", "Petrovich") };
+	vector<Employee> w2 = { Employee("Name", "NoName"), Employee("Vasilii", "Pirogov"), Employee("Igor", "Nikolaev") };
+	vector<Department> deps = { Department("1 otdel razvedki", w1), Department("Seckretariat", w2) };
+	Enterprise ent("Sharaskina kontora", deps);
+
+	cout << " *** Enterprise info ***" << endl;
+	cout << "Name:\t" << ent.GetName() << endl;
+	cout << "Count of departments: " << ent.GetDepartmentCount() << endl;
+	cout << "Departments: " << endl;
+	vector<string> departments = ent.GetDepartmentNames();
+	for (size_t i = 0; i < departments.size(); i++)
+	{
+		Department tmp_dep = ent.GetDeparment(departments[i]);
+		cout << "\t Department name: " << tmp_dep.GetName() << endl;
+		cout << "\t Enterprise: " << tmp_dep.GetEnterpriseName() << endl;
+		cout << "\t Count of employee: " << tmp_dep.GetEmployeeCount() << endl;
+		vector<string> employees = tmp_dep.GetAllEmployees();
+		cout << "\t Employees: " << endl;
+		for (size_t j = 0; j < employees.size(); j++)
+		{
+			if (!tmp_dep.ExistingEmployee(employees[i])) cout << "ERROR" << endl;
+			Employee tmp_emp = tmp_dep.GetEmployee(employees[i]);
+			cout << "\t\t Name:" << tmp_emp.GetName() << endl;
+			cout << "\t\t Surname:" << tmp_emp.GetSurname() << endl;
+			cout << "\t\t Department:" << tmp_emp.GetDepartmentName() << endl;
+			cout << endl;
+		}
+		cout << endl;
+	}
+	cout << "All names:" << endl;
+	vector<string> s = ent.GetAllEmployees();
+	for (size_t i = 0; i < s.size(); i++)
+		cout << s[i] << endl;
 
 	system("pause");
 	return 0;
